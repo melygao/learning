@@ -1,0 +1,95 @@
+<?php
+$str = 'abcd';
+function assembly($str, $num, $s, $needLen)
+{
+    if (strlen($s) == $needLen) {
+        echo $s."\n";
+        return;
+    }
+    $len = strlen($str);
+    for ($i=0; $i<=$len-$num; ++$i) {
+        assembly(substr($str, 1+$i), $num-1, $s.$str[$i], $needLen);
+    }
+}
+function assemblyStr($str)
+{
+    $length = strlen($str);
+    for ($i=1; $i<=$length; ++$i) {
+        assembly($str, $i, '', $i);
+    }
+}
+//assemblyStr($str);
+
+function combination($str, $num, $s)
+{
+    if ($str == '' || $num == 0) {
+        echo $s."\n";
+        return;
+    }
+    combination(substr($str, 1), $num-1, $s.$str[0]);
+    combination(substr($str, 1), $num, $s);
+}
+//combination($str, strlen($str), '');
+
+function printQueen($queen)
+{
+    foreach ($queen as $key=>$value) {
+        echo "($key, $value) ";
+    }
+    echo "\n";
+}
+
+function initQueue(&$queen)
+{
+    for ($i=0; $i<8; ++$i) {
+        $queen[$i] = -1;
+    }
+}
+
+function isSecurity($queen)
+{
+    for ($i=1; $i<8; ++$i) {
+        $x = $i;
+        $y = $queen[$i];
+        if ($y == -1) {
+            return true;
+        }
+        for ($j=0; $j<$i; ++$j) {
+            if ($y == $queen[$j]) {
+                return false;
+            }
+            if (abs($queen[$j]-$y) == abs($j-$x)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function cal8queen($queen, $index)
+{
+    if (($index >= 8) || ($index < 0)) {
+        return;
+    }
+    for ($i=0; $i<8; ++$i) {
+        $queen[$index] = $i;
+        if (isSecurity($queen)) {
+            if ($index == 7) {
+                global $num;
+                echo $num.'->';
+                printQueen($queen);
+                ++$num;
+            }
+            cal8queen($queen, $index+1);
+        }
+    }
+}
+$num = 1;
+function sQueen()
+{
+    $queen = [];
+    initQueue($queen);
+    cal8queen($queen, 0);
+}
+sQueen();
+echo $num."\n";
