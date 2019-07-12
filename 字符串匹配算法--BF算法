@@ -1,0 +1,24 @@
+<?php
+$mainStr = 'wabsfsfabsfsfs';
+$patternStr = 'abc';
+function bfAlgorithm($mainStr, $patternStr)
+{
+    $mainLen = strlen($mainStr);
+    $patternLen = strlen($patternStr);
+    if ($mainLen < $patternLen) {
+        return -1;
+    }
+    for ($i=0; $i<$mainLen; ++$i) {
+        $j=0;
+        while (($j<$patternLen) && ($mainStr[$i+$j]==$patternStr[$j])) {
+            $j++;
+        }
+        if ($j == $patternLen) {
+            return $i;
+        }
+    }
+    return -1;
+}
+
+$result = bfAlgorithm($mainStr, $patternStr);
+echo "result = $result\n";
