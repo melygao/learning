@@ -14,6 +14,7 @@ function josephusRecursion($n, $m) {
     return $result;
 }
 echo josephusRecursion(41, 3)."\n";
+//循环实现
 function josephusCirculation($n, $m) {
     if ($n <= 1) {
         return 1;
