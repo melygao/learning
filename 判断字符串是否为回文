@@ -1,0 +1,45 @@
+<?php
+//什么事回文字符串是指中心左右对称的字符串。例如：ABCBA或者AACCAA是回文字符串；ABCCA或者AABBCC不是回文字符串。
+//判断是否为回文字符串
+function isPalindrome_1($str)
+{
+    $len = strlen($str);
+    $left = 0;//左游标
+    $right = 0;//右游标
+    $mid = intval($len / 2);//字符串中间下标
+    if ($len%2 == 0) {//偶数长度
+        $left = $mid - 1;
+        $right = $mid;
+    } else {
+        $left = $mid - 1;
+        $right = $mid + 1;
+    }
+    while ($left>=0 && $right<$len) {
+        if ($str[$left--] != $str[$right++]) {
+            break;
+        }
+    }
+    if ($left==-1 && $right==$len) {
+        return 1;
+    }
+    return -1;
+}
+$str = 'abcdedcba123';
+echo isPalindrome_1($str)."\n";
+
+function isPalindrome_2($str)
+{
+    $len = strlen($str);
+    $left = 0;
+    $right = $len-1;
+    while ($left <= $right) {
+        if ($str[$left++] != $str[$right--]) {
+            break;
+        }
+    }
+    if ($left > $right) {
+        return 1;
+    }
+    return -1;
+}
+echo isPalindrome_2($str)."\n";
