@@ -1,0 +1,116 @@
+<?php
+$data = [14,2,57,23,56,12,34,89,2,123,567,6,19,23,34,12,36,1];
+
+//冒泡排序
+function bubbleSort($data)
+{
+    if (empty($data)) {
+        return false;
+    }
+    $len = count($data);
+    for ($i=1; $i<$len; ++$i) {
+        $isSort = false;
+        for ($j=0; $j<$len-$i; ++$j) {
+            if ($data[$j] > $data[$j+1]) {
+                $temp = $data[$j];
+                $data[$j] = $data[$j+1];
+                $data[$j+1] = $temp;
+                $isSort = true;
+            }
+        }
+        if (!$isSort) {
+            break;
+        }
+    }
+    echo "bubble sort: ";
+    printArray($data);
+}
+
+//插入排序
+function insertionSort($data)
+{
+    if (empty($data)) {
+        return false;
+    }
+    $len = count($data);
+    for ($i=1; $i<$len; ++$i) {
+        $temp = $data[$i];
+        $j = $i;
+        for (; $j>0; --$j) {
+            if ($data[$j-1] <= $temp) {
+                break;
+            }
+            $data[$j] = $data[$j-1];
+        }
+        $data[$j] = $temp;
+    }
+    echo "insert sort: ";
+    printArray($data);
+}
+
+//希尔排序
+function shellSort($data)
+{
+    if (empty($data)) {
+        return false;
+    }
+    $len = count($data);
+    $n = intval($len/2);
+    while ($n > 0) {
+        for ($i=$n; $i<$len; $i=$i+$n) {
+            $temp = $data[$i];
+            $j = $i;
+            for (; $j>0; $j=$j-$n) {
+                if ($data[$j-$n] > $temp) {
+                    $data[$j] = $data[$j-$n];
+                } else {
+                    break;
+                }
+            }
+            $data[$j] = $temp;
+        }
+        $n = intval($n/2);
+    }
+    echo "shell sort: ";
+    printArray($data);
+}
+
+//选择排序
+function selectionSort($data)
+{
+    if (empty($data)) {
+        return false;
+    }
+    $len = count($data);
+    for ($i=0; $i<$len-1; ++$i) {
+        $minIndex = $i;
+        for ($j=$i; $j<$len; ++$j) {
+            if ($data[$minIndex] > $data[$j]) {
+                $minIndex = $j;
+            }
+        }
+        $temp = $data[$minIndex];
+        $data[$minIndex] = $data[$i];
+        $data[$i] = $temp;
+    }
+    echo "selection sort: ";
+    printArray($data);
+}
+
+function printArray($data)
+{
+    if (empty($data)) {
+        return false;
+    }
+    foreach ($data as $value) {
+        echo "$value ";
+    }
+    echo "\n";
+}
+echo "original order: ";
+printArray($data);
+bubbleSort($data);
+insertionSort($data);
+selectionSort($data);
+shellSort($data);
+
