@@ -1,5 +1,6 @@
 <?php
 $str = 'abcd';
+//字符串排列
 function assembly($str, $num, $s, $needLen)
 {
     if (strlen($s) == $needLen) {
@@ -19,7 +20,7 @@ function assemblyStr($str)
     }
 }
 //assemblyStr($str);
-
+//字符串组合
 function combination($str, $num, $s)
 {
     if ($str == '' || $num == 0) {
@@ -30,7 +31,7 @@ function combination($str, $num, $s)
     combination(substr($str, 1), $num, $s);
 }
 //combination($str, strlen($str), '');
-
+//八皇后问题
 function printQueen($queen)
 {
     foreach ($queen as $key=>$value) {
