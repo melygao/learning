@@ -1,0 +1,105 @@
+<?php
+/************************ 归并排序算法 ************************************/
+//归并排序算法
+function mergeSort(&$data)
+{
+    if (empty($data)) {
+        return false;
+    }
+    $len = count($data);
+    mergeSortCode($data, 0, $len-1);
+}
+//归并排序算法编码
+function mergeSortCode(&$data, $p, $r)
+{
+    if ($p >= $r) {
+        return true;
+    }
+    $q = intval(($p+$r)/2);
+    mergeSortCode($data, $p, $q);
+    mergeSortCode($data, $q+1, $r);
+    merge($data, $p, $q, $r);
+}
+//归并已排序的数据
+function merge(&$data, $p, $q, $r)
+{
+    $i = $p;
+    $j = $q+1;
+    $temp = [];
+    while ($i<=$q && $j<=$r) {
+        if ($data[$i] <= $data[$j]) {
+            $temp[] = $data[$i++];
+        } else {
+            $temp[] = $data[$j++];
+        }
+    }
+    while ($i <= $q) {
+        $temp[] = $data[$i++];
+    }
+    while ($j <= $r) {
+        $temp[] = $data[$j++];
+    }
+    $k = $p;
+    foreach ($temp as $value) {
+        $data[$k] = $value;
+        ++$k;
+    }
+}
+/*******************快速排序****************************************/
+function quickSort(&$data)
+{
+    if (empty($data)) {
+        return false;
+    }
+    $len = count($data);
+    quickSortCode($data, 0, $len-1);
+}
+//快排编码
+function quickSortCode(&$data, $p, $r)
+{
+    if ($p>=$r) {
+        return true;
+    }
+    $q = partition($data, $p, $r);
+    quickSortCode($data, $p, $q-1);
+    quickSortCode($data, $q+1, $r);
+}
+//划分函数
+function partition(&$data, $p, $r)
+{
+    $value = $data[$r];
+    $i = $p;
+    $j = $p;
+    while ($j<$r) {
+        if ($data[$j] < $value) {
+            $temp = $data[$i];
+            $data[$i] = $data[$j];
+            $data[$j] = $temp;
+            ++$i;
+            ++$j;
+        } else {
+            ++$j;
+        }
+    }
+    $data[$r] = $data[$i];
+    $data[$i] = $value;
+    return $i;
+}
+//打印数组
+function printArray($data)
+{
+    if (empty($data)) {
+        return false;
+    }
+    foreach ($data as $value) {
+        echo "$value ";
+    }
+    echo "\n";
+}
+
+$data = [14,2,57,23,56,12,34,89,2,123,567,6,19,23,34,12,36,1];
+mergeSort($data);
+printArray($data);
+$data = [1,24,5,3,6,1,4,19,23,13,67,46,129,123,324,132,316,1];
+quickSort($data);
+printArray($data);
