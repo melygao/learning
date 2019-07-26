@@ -1,0 +1,141 @@
+<?php
+$data = [1,5,9,12,15,17,21,22,25,29,50];
+//二分查找-循环实现
+function binarySearch($data, $value)
+{
+    if (empty($data)) {
+        return false;
+    }
+    $len = count($data);
+    $left = 0;
+    $right = $len-1;
+    while ($left <= $right) {
+        $middle = intval(($left+$right)/2);
+        if ($data[$middle] === $value) {
+            return $middle;
+        } else if ($data[$middle] > $value) {
+            $right = $middle - 1;
+        } else {
+            $left = $middle + 1;
+        }
+    }
+    return false;
+}
+//二分查找递归实现
+function binarySearch2($data, $value)
+{
+    if (empty($data)) {
+        return false;
+    }
+    $len = count($data);
+    return binarySearch_code($data, 0, $len-1, $value);
+}
+function binarySearch_code($data, $left, $right, $value)
+{
+    if ($left > $right) {
+        return false;
+    }
+    $middle = intval(($left + $right)/2);
+    if ($data[$middle] === $value) {
+        return $middle;
+    } else if ($data[$middle] > $value) {
+        return binarySearch_code($data, $left, $middle-1, $value);
+    } else {
+        return binarySearch_code($data, $middle+1, $right, $value);
+    }
+}
+/*********************二分查找变体(查找数组里面有重复的元素)***********************************/
+$data1 = [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,6,6,6,6,6,6,16,16,21,21,22,25,25,25,26];
+//查找第一个等于给定值的元素下标
+function binarySearch3($data, $value)
+{
+    $len = count($data);
+    $low = 0;
+    $high = $len-1;
+    while ($low <= $high) {
+        $mid = $low + intval(($high-$low)/2);
+        if ($data[$mid] > $value) {
+            $high = $mid - 1;
+        } else if ($data[$mid] < $value) {
+            $low = $mid + 1;
+        } else {
+            if ($mid==0 || $data[$mid-1] != $value) {
+                return $mid;
+            }
+            $high = $mid - 1;
+        }
+    }
+    return -1;
+}
+//查找最后一个等于给定值的元素下标
+function binarySearch4($data, $value)
+{
+    $len = count($data);
+    $low = 0;
+    $high = $len-1;
+    while ($low <= $high) {
+        $mid = $low + intval(($high-$low)/2);
+        if ($data[$mid] > $value) {
+            $high = $mid-1;
+        } else if ($data[$mid] < $value) {
+            $low = $mid + 1;
+        } else {
+            if ($mid==$len-1 || $data[$mid+1] != $value) {
+                return $mid;
+            }
+            $low = $mid + 1;
+        }
+    }
+    return -1;
+}
+//查找第一个大于等于给定值的元素下标
+function binarySearch5($data, $value)
+{
+    $len = count($data);
+    $low = 0;
+    $high = $len - 1;
+    while ($low <= $high) {
+        $mid = $low + intval(($high-$low)/2);
+        if ($data[$mid] < $value) {
+            $low = $mid+1;
+        } else {
+            if ($mid==0 || $data[$mid-1] < $value) {
+                return $mid;
+            }
+            $high = $mid - 1;
+        }
+    }
+    return -1;
+}
+//查找最后一个小于等于给定值的元素下标
+function binarySearch6($data, $value)
+{
+    $len = count($data);
+    $low = 0;
+    $high = $len - 1;
+    while ($low <= $high) {
+        $mid = $low + intval(($high-$low)/2);
+        if ($data[$mid] > $value) {
+            $high = $mid - 1;
+        } else {
+            if ($mid==$len-1 || $data[$mid+1]>$value) {
+                return $mid;
+            }
+            $low = $mid + 1;
+        }
+    }
+    return -1;
+}
+$result = binarySearch($data, 50);
+echo "result1 $result \n";
+$result = binarySearch2($data, 50);
+echo "result2 $result \n";
+
+$result = binarySearch3($data1, 17);
+echo "result3 $result \n";
+$result = binarySearch4($data1, 17);
+echo "result4 $result \n";
+$result = binarySearch5($data1, 17);
+echo "result5 $result \n";
+$result = binarySearch6($data1, 17);
+echo "result6 $result \n";
