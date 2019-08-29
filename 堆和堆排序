@@ -1,0 +1,145 @@
+<?php
+class heap
+{
+    //堆数据存储空间(数组)，数组中第一个元素(下标为0)不加入堆数据里，这样做是为了方便计算节点的父子关系
+    //既：父节点的下标i，其左子节点：2*1，右子节点：2*i+1。
+    private $data = [-1];
+    private $count = 0;//堆的数据个数。
+    
+    public function __construct(array $data)
+    {
+        $i = 1;//堆数据从下标1开始存储
+        foreach ($data as $value) {
+            $this->data[$i] = $value;
+            ++$this->count;
+            ++$i;
+        }
+    }
+    
+    /**
+     * @desc 堆化  从底端向上进行堆调整
+     * @param integer $index 从下往上调整的起始节点下标
+     */
+    public function heapAdjustBottom($index)
+    {
+        if ($index<1 || $index>$this->count) {
+            return false;
+        }
+        while (intval($index/2)>0 && $this->data[intval($index/2)]<$this->data[$index]) {
+            $pindex = intval($index/2);
+            $temp = $this->data[$index];
+            $this->data[$index] = $this->data[$pindex];
+            $this->data[$pindex] = $temp;
+            $index = $pindex;
+        }
+        return true;
+    }
+    
+    /**
+     * @desc 从上到下进行堆调整
+     * @param integer $index 从上往下调整的起始节点下标
+     */
+    public function heapAdjustHead($index)
+    {
+        if ($index<1 || $index>$this->count) {
+            return false;
+        }
+        
+        while ($index*2 <= $this->count) {
+            $maxPos = $index;
+            if ($this->data[$maxPos] < $this->data[$index*2]) {
+                $maxPos = $index*2;
+            }
+            if (($index*2+1)<=$this->count && ($this->data[$maxPos] < $this->data[$index*2+1])) {
+                $maxPos = $index*2+1;
+            }
+            if ($maxPos == $index) {
+                break;
+            }
+            $temp = $this->data[$index];
+            $this->data[$index] = $this->data[$maxPos];
+            $this->data[$maxPos] = $temp;
+            $index = $maxPos;
+        }
+    }
+    
+    /**
+     * @deac 添加节点
+     * @param integer $value 添加节点的值
+     */
+    public function addNode($value)
+    {
+        ++$this->count;
+        $this->data[$this->count] = $value;
+        $this->heapAdjustBottom($this->count);
+    }
+    
+    /**
+     * @desc 删除节点
+     */
+    public function deleteNode()
+    {
+        if ($this->count < 1) {
+            return false;
+        }
+        $result = $this->data[1];
+        $this->data[1] = $this->data[$this->count];
+        --$this->count;
+        $this->heapAdjustHead(1);
+    }
+    
+    /**
+     * @desc 创建堆
+     */
+    public function createHeap()
+    {
+        $index = intval($this->count/2);//最后一个节点的父节点
+        while ($index > 0) {
+            $this->heapAdjustHead($index);
+            --$index;
+        }
+    }
+    /**
+     * @desc 打印数据
+     */
+    public function printHeapData()
+    {
+        for ($i=1; $i<=$this->count; ++$i) {
+            echo $this->data[$i].' ';
+        }
+        echo " \n";
+    }
+    
+    /**
+     * @desc 堆排序
+     */
+    public function heapSort()
+    {
+        $this->createHeap();
+        $count = $this->count;
+        while ($this->count > 1) {
+            $temp = $this->data[$this->count];
+            $this->data[$this->count] = $this->data[1];
+            $this->data[1] = $temp;
+            --$this->count;
+            $this->heapAdjustHead(1);
+        }
+        $this->count = $count;
+    }
+}
+$data = [2,3,4,7,1,2,9,12];
+$obj = new heap($data);
+echo "创建堆：\n";
+$obj->createHeap();
+$obj->printHeapData();
+echo "添加节点：19\n";
+$obj->addNode(19);
+$obj->printHeapData();
+echo "删除节点\n";
+$obj->deleteNode();
+$obj->printHeapData();
+echo "堆排序\n";
+$obj->addNode(13);
+$obj->addNode(10);
+$obj->heapSort();
+$obj->printHeapData();
