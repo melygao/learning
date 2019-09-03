@@ -1,0 +1,21 @@
+<?php
+/**
+ * 卡特兰数：h(n) = h(0)*h(n-1)+h(1)*h(n-2)+...+h(k-1)*h(n-k)+...+h(n-1)*h(0); n>=2, 1<= k <=n;
+ */
+function catalanNumber($n)
+{
+    if ($n==0 || $n==1) {
+        return 1;
+    }
+    $result = 0;
+    for ($k=1; $k<=$n; ++$k) {
+        $result += catalanNumber($k-1)*catalanNumber($n-$k);
+    }
+    return $result;
+}
+
+for($i=1; $i<=10; ++$i){
+    $res = catalanNumber($i);
+    echo $res." ";
+}
+echo "\n";
