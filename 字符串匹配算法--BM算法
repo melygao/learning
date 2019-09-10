@@ -1,0 +1,112 @@
+<?php
+/**
+ * @desc 预处理生成模式串里各个字符所在模式串里的最后一个下标值的数组
+ * @param string $patternStr 模式串
+ * @param integer $m 模式串长度
+ * @param array $bc 模式串里各个字符所对应的最后一个下标值数组
+ */
+function generateBC($patternStr, $m, array &$bc)
+{
+    for ($i=0; $i<$m; ++$i) {
+        $bc[$patternStr[$i]] = $i;
+    }
+}
+/**
+ * @desc 预处理生成模式串的suffix和prefix数组。suffix数组：好后缀在模式串里匹配的开始位置，prefix数组：好后缀是否匹配前缀的数组
+ * @param string $patternStr 模式串
+ * @param integer $m 模式串长度
+ * @param array $suffix 
+ * @param array $prefix
+ */
+function generateSP($patternStr, $m, array &$suffix, array &$prefix)
+{
+    for ($i=0; $i<$m-1; ++$i) {
+        $j = $i;
+        $k = 0;
+        while ($j>=0 && $patternStr[$j] == $patternStr[$m-1-$k]) {
+            --$j;
+            ++$k;
+            $suffix[$k] = $j+1;
+        }
+        if ($j < 0) {
+            $prefix[$k] = 1;
+        }
+    }
+}
+
+/**
+ * @desc 获得移动长度
+ * @param integer $pl 模式串长度
+ * @param integer $k 好后缀长度
+ * @param array $suffix
+ * @param array $prefix
+ * @return number
+ */
+function getSPMoveLen($pl, $k, array $suffix, array $prefix)
+{
+    if (isset($suffix[$k])) {
+        return $pl-$k-$suffix[$k];
+    }
+    for ($j=$k-1; $j>0; --$j) {
+        if ($prefix[$j] == true) {
+            break;
+        }
+    }
+    if ($j>0) {
+        return $pl-$k;
+    }
+    return $pl;
+}
+
+/**
+ * @desc BM字符串匹配算法
+ * @param string $mainStr 主串
+ * @param string $patternStr 模式串
+ */
+function bm($mainStr, $patternStr)
+{
+    $ml = strlen($mainStr);//主串长度
+    $pl = strlen($patternStr);//模式串长度
+    
+    if ($pl > $ml) {
+        return false;
+    }
+    $bc = [];
+    generateBC($patternStr, $pl, $bc);
+    $suffix = [];
+    $prefix = [];
+    generateSP($patternStr, $pl, $suffix, $prefix);
+    $i = 0;
+    while ($i <= $ml-$pl) {
+        $j = $pl-1;
+        while ($j>=0 && $mainStr[$i+$j] == $patternStr[$j]) {
+            --$j;
+        }
+        if ($j == -1) {
+            return $i;
+        }
+        $k = $pl-1-$j;//好后缀长度
+        $l1 = $pl;//坏字符默认移动距离等于模式串的长度
+        if (isset($bc[$mainStr[$i+$j]])) {
+            $l1 = $j - $bc[$mainStr[$i+$j]];
+        }
+        $l2 = 0;//好后缀默认移动距离为0
+        if ($k != 0) {
+            $l2 = getSPMoveLen($pl, $k, $suffix, $prefix);
+        }
+        
+        //求距离的最大值
+        $maxLen = $l1;
+        if ($maxLen < $l2) {
+            $maxLen = $l2;
+        }
+        $i = $i + $maxLen;
+    }
+    return -1;
+}
+
+$mainStr = 'ansdfedBM123 sdfs ——+（（）sdfsf';
+$patternStr = '123';
+
+$index = bm($mainStr, $patternStr);
+echo "index = $index \n";
