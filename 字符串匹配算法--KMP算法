@@ -1,0 +1,57 @@
+<?php
+//字符串匹配算法，KMP算法
+
+/**
+ * @desc 使用动态规划生成next数组
+ * @param string $b 模式串
+ * @param integer $m 模式串的长度
+ * @param array $next next数组
+ */
+function generateNext($b, $m, array &$next)
+{
+    $next[0] = -1;
+    $k = -1;
+    for ($i=1; $i<$m; ++$i) {
+        while ($k!=-1 && $b[$k+1]!=$b[$i]) {
+            $k = $next[$k];
+        }
+        if ($b[$k+1] == $b[$i]) {
+            ++$k;
+        }
+        $next[$i] = $k;
+    }
+}
+
+/**
+ * @desc 字符串匹配算法bm
+ * @param string $a 主串
+ * @param integer $n 主串长度
+ * @param string $b 模式串
+ * @param integer $m 模式串长度
+ */
+function kmp($a, $n, $b, $m)
+{
+    $next = [];
+    generateNext($b, $m, $next);
+    $j = 0;
+    for ($i=0; $i<$n; ++$i) {
+        while ($j>0 && $b[$j]!=$a[$i]) {
+            $j = $next[$j] + 1;
+        }
+        if ($b[$j] == $a[$i]) {
+            ++$j;
+        }
+        if ($j == $m) {
+            return $i-$m+1;
+        }
+    }
+    return -1;
+}
+
+$mainStr = 'ansdfed(())BM12323 sdfs ——+（（）sdfsf';
+$ml = strlen($mainStr);
+$patternStr = '((';
+$pl = strlen($patternStr);
+
+$index = kmp($mainStr, $ml, $patternStr, $pl);
+echo "index = $index \n";
