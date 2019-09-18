@@ -1,0 +1,87 @@
+<?php
+class trieNode
+{
+    public $data;
+    public $children = [];
+    public $isEndingChar = false;
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+}
+class trie
+{
+    private $root;
+    public function __construct()
+    {
+        $this->root = new trieNode('/');
+    }
+    
+    /**
+     * @desc 添加字符串(不支持中文)
+     * @param string $str 字符串
+     */
+    public function insert($str)
+    {
+        if ($str == '') {
+            return false;
+        }
+        $p = $this->root;
+        $len = strlen($str);
+        for ($i=0; $i<$len; ++$i) {
+            if (!isset($p->children[$str[$i]])) {
+                $p->children[$str[$i]] = new trieNode($str[$i]);
+            }
+            $p = $p->children[$str[$i]];
+        }
+        $p->isEndingChar = true;
+        return true;
+    }
+    
+    /**
+     * @desc 查找字符串 (不支持中文)
+     * @param string $str 字符串
+     */
+    public function find($str)
+    {
+        if ($str == '') {
+            return 0;
+        }
+        $p = $this->root;
+        $len = strlen($str);
+        for ($i=0; $i<$len; ++$i) {
+            if (!isset($p->children[$str[$i]])) {
+                return 0;
+            }
+            $p = $p->children[$str[$i]];
+        }
+        if ($p->isEndingChar == true) {
+            return 1;
+        }
+        return 0;
+    }
+}
+$obj = new trie();
+
+$strs = [
+    'abcdef',
+    'abcf',
+    'abcdddd',
+    'defs',
+    'defff'
+];
+foreach ($strs as $val) {
+    $obj->insert($val);
+}
+
+$a = 'abcf';
+echo $a.':'.$obj->find($a)."\n";
+
+$b = 'abcfd';
+echo $b.':'.$obj->find($b)."\n";
+
+$c = 'deff';
+echo $c.':'.$obj->find($c)."\n";
+
+$d = 'defff';
+echo $d.':'.$obj->find($d)."\n";
